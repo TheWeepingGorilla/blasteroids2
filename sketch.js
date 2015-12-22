@@ -3,7 +3,7 @@ var s = function( p ) {
 
 	function Thing() {
 		this.spin = p.createVector(0, 0, 0);
-		this.spinLocation = 0;
+		this.spinAccumulator = 0;
 		this.spinVelocity = 0;
 
 		this.angle = 0;
@@ -106,7 +106,7 @@ var s = function( p ) {
 	function Box(size) {
 		Thing.call(this);
 
-		this.spinLocation = 0;
+		this.spinAccumulator = 0;
 		this.spin = p.createVector(1,1,0);
 		this.size = size;
 
@@ -129,12 +129,12 @@ var s = function( p ) {
 
   	for (i=0; i<objects.length; i++) {
 	  	p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
-	  	p.rotate(objects[i].spinLocation, objects[i].spin);
+	  	p.rotate(objects[i].spinAccumulator, objects[i].spin);
 	  	p.box(objects[i].size);
 
 	  	objects[i].location.x -= 1;
 	  	objects[i].location.y -= 2;
-	  	objects[i].spinLocation += .1;
+	  	objects[i].spinAccumulator += .1;
 
 		  // Position Resets
 		  if (objects[i].location.y < -p.windowHeight) {
