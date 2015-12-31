@@ -32,7 +32,7 @@ var s = function( p ) {
 			}
 		}
 
-		this.explosionAnimation = function(frame) {
+this.explosionAnimation = function(frame) {
 			if (frame < 20) {
 				p.noStroke();
   			for (j = 0; j < 10; j++) {
@@ -100,6 +100,7 @@ var s = function( p ) {
 		this.move = function() {
 			this.angle = this.angle + this.angularVelocity;
 			this.location = this.location.add(this.velocity);
+			this.spinAccumulator += this.spinVelocity;
 		}
 	}
 
@@ -116,8 +117,56 @@ var s = function( p ) {
 	}
 	Box.prototype = Object.create(Thing.prototype);
 
+	function Level(args) {
+		this.top = args.top;
+		this.left = args.left;
+		this.bottom = args.bottom;
+		this.right = args.right;
+
+		this.checkBoundaries = function(thing) {
+			this.top(thing);
+			this.left(thing);
+			this.bottom(thing);
+			this.right(thing);
+		}
+	}
+
+	wrapTop = function(thing) {
+		if (thing.location.y > p.windowHeight) {
+		  thing.location.y = -p.windowHeight;
+		};
+	}
+
+	wrapBottom = function(thing) {
+		if (objects[i].location.y < -p.windowHeight) {
+		  objects[i].location.y = p.windowHeight;
+		};
+	}
+
+	wrapLeft = function(thing) {
+		if (objects[i].location.x < -p.windowWidth) {
+	    objects[i].location.x = p.windowWidth;
+		};
+	}
+
+	wrapRight = function(thing) {
+		if (objects[i].location.x > p.windowWidth) {
+	    objects[i].location.x = -p.windowWidth;
+		};
+	}
+
 	var objects = [];
 	objects[0] = new Box(50);
+	objects[0].velocity.x = 0;
+	objects[0].velocity.y = -4;
+	objects[0].spin.x = 1;
+	objects[0].spin.y = 1;
+	objects[0].spin.z = 0;
+	objects[0].spinVelocity = .1;
+
+	var levels = [];
+	levels[0] = {top: wrapTop, left: wrapLeft, bottom: wrapBottom, right: wrapRight};
+	var level = new Level(levels[0]);
 
 	p.setup = function() {
   	p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
@@ -130,19 +179,9 @@ var s = function( p ) {
   	for (i=0; i<objects.length; i++) {
 	  	p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
 	  	p.rotate(objects[i].spinAccumulator, objects[i].spin);
-	  	p.box(objects[i].size);
-
-	  	objects[i].location.x -= 1;
-	  	objects[i].location.y -= 2;
-	  	objects[i].spinAccumulator += .1;
-
-		  // Position Resets
-		  if (objects[i].location.y < -p.windowHeight) {
-		    objects[i].location.y = p.windowHeight;
-			};
-			if (objects[i].location.x < -p.windowWidth) {
-		    objects[i].location.x = p.windowWidth;
-			};
+	  	objects[i].drawMain();
+	  	objects[i].move();
+	 		level.checkBoundaries(objects[i]);
 		}
 	};
 
