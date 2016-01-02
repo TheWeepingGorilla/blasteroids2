@@ -32,27 +32,27 @@ var s = function( p ) {
 			}
 		}
 
-this.explosionAnimation = function(frame) {
+		this.explosionAnimation = function(frame) {
 			if (frame < 20) {
 				p.noStroke();
-  			for (j = 0; j < 10; j++) {
-  				p.ellipse(0, 0, frame, frame * 2.5);
-  				p.rotate(p.PI/5);
-  			}
+				for (j = 0; j < 10; j++) {
+					p.ellipse(0, 0, frame, frame * 2.5);
+					p.rotate(p.PI/5);
+				}
 			}
 			if ((frame >= 20) && (frame < 40)) {
 				p.noStroke();
-  			for (j = 0; j < 10; j++) {
-  				p.ellipse(0, 0, 20, 50);
-  				p.rotate(p.PI/5);
-  			}
+				for (j = 0; j < 10; j++) {
+					p.ellipse(0, 0, 20, 50);
+					p.rotate(p.PI/5);
+				}
 			}
 			if ((frame >= 40) && (frame < 45)) {
 				p.noStroke();
 				for (j = 0; j < 10; j++) {
-  				p.ellipse(0, 0, 20 - ((frame - 40) * 4), 50 - ((frame - 40) * 10));
-  				p.rotate(p.PI/5);
-  			}
+					p.ellipse(0, 0, 20 - ((frame - 40) * 4), 50 - ((frame - 40) * 10));
+					p.rotate(p.PI/5);
+				}
 			}
 		}
 
@@ -132,27 +132,83 @@ this.explosionAnimation = function(frame) {
 	}
 
 	wrapTop = function(thing) {
-		if (thing.location.y > p.windowHeight) {
-		  thing.location.y = -p.windowHeight;
-		};
+		if ((thing.location.y > (p.height * topWrap)) && (thing.velocity.y > 0)) {
+			thing.location.y = -p.height * topWrap;
+			console.log("Y: " + thing.location.y + " Height: " + p.height);
+		}
 	}
 
 	wrapBottom = function(thing) {
-		if (objects[i].location.y < -p.windowHeight) {
-		  objects[i].location.y = p.windowHeight;
-		};
+		if ((thing.location.y < (-p.height * bottomWrap)) && (thing.velocity.y < 0)) {
+			thing.location.y = p.height * bottomWrap;
+			console.log("Y: " + thing.location.y + " Height: " + p.height);
+		}
 	}
 
 	wrapLeft = function(thing) {
-		if (objects[i].location.x < -p.windowWidth) {
-	    objects[i].location.x = p.windowWidth;
-		};
+		if ((thing.location.x < (-p.width * leftWrap)) && (thing.velocity.x < 0)) {
+			thing.location.x = p.width * leftWrap;
+			console.log("X: " + thing.location.x + " Width: " + p.width);
+		}
 	}
 
 	wrapRight = function(thing) {
-		if (objects[i].location.x > p.windowWidth) {
-	    objects[i].location.x = -p.windowWidth;
-		};
+		if ((thing.location.x > (p.width * rightWrap)) && (thing.velocity.x > 0)) {
+			thing.location.x = -p.width * rightWrap;
+			console.log("X: " + thing.location.x + " Width: " + p.width);
+		}
+	}
+
+	wrapCallibrate = function() {
+		if ((p.width >= 1700) && (p.width < 1800)) {
+			rightWrap = .59;
+			leftWrap = .59;
+		}
+		if ((p.width >= 1600) && (p.width < 1700)) {
+			rightWrap = .61;
+			leftWrap = .61;
+		}
+		if ((p.width >= 1500) && (p.width < 1600)) {
+			rightWrap = .66;
+			leftWrap = .66;
+		}
+		if ((p.width >= 1400) && (p.width < 1500)) {
+			rightWrap = .72;
+			leftWrap = .72;
+		}
+		if ((p.width >= 1300) && (p.width < 1400)) {
+			rightWrap = .77;
+			leftWrap = .77;
+		}
+		if ((p.width >= 1200) && (p.width < 1300)) {
+			rightWrap = .81;
+			leftWrap = .81;
+		}
+		if ((p.width >= 1100) && (p.width < 1200)) {
+			rightWrap = .91;
+			leftWrap = .91;
+		}
+		if ((p.width >= 1000) && (p.width < 1100)) {
+			rightWrap = 1.04;
+			leftWrap = 1.04;
+		}
+		if ((p.width >= 900) && (p.width < 1000)) {
+			rightWrap = 1.21;
+			leftWrap = 1.21;
+		}
+		if ((p.width >= 800) && (p.width < 900)) {
+			rightWrap = 1.33;
+			leftWrap = 1.33;
+		}
+		if ((p.width >= 700) && (p.width < 800)) {
+			rightWrap = 1.45;
+			leftWrap = 1.45;
+		}
+		// Top & Bottom
+		if ((p.height >= 700) && (p.height < 800)) {
+			topWrap = 1.60;
+			bottomWrap = 1.60;
+		}
 	}
 
 	var objects = [];
@@ -169,25 +225,28 @@ this.explosionAnimation = function(frame) {
 	var level = new Level(levels[0]);
 
 	p.setup = function() {
-  	p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-  	p.ortho(-p.width, p.width, p.height, -p.height, 0.1, 100);
+		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+		p.ortho(-p.width, p.width, p.height, -p.height, 0.1, 100);
+		wrapCallibrate();
+		console.log(p.height);
 	};
 
 	p.draw = function() {
 		p.background(0);
 
-  	for (i=0; i<objects.length; i++) {
-	  	p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
-	  	p.rotate(objects[i].spinAccumulator, objects[i].spin);
-	  	objects[i].drawMain();
-	  	objects[i].move();
-	 		level.checkBoundaries(objects[i]);
+		for (i=0; i<objects.length; i++) {
+			p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
+			p.rotate(objects[i].spinAccumulator, objects[i].spin);
+			objects[i].drawMain();
+			objects[i].move();
+			level.checkBoundaries(objects[i]);
 		}
 	};
 
 	// auto-resize canvas to window size
 	p.windowResized = function() {
-  	p.resizeCanvas(p.windowWidth, p.windowHeight);
+		p.resizeCanvas(p.windowWidth, p.windowHeight);
+		wrapCallibrate();
 	}
 };
 
