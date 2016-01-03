@@ -205,9 +205,37 @@ var s = function( p ) {
 			leftWrap = 1.45;
 		}
 		// Top & Bottom
+		if ((p.height >= 900) && (p.height < 1000)) {
+			topWrap = 1.00;
+			bottomWrap = 1.00;
+		}
+		if ((p.height >= 800) && (p.height < 900)) {
+			topWrap = 1.20;
+			bottomWrap = 1.20;
+		}
 		if ((p.height >= 700) && (p.height < 800)) {
 			topWrap = 1.60;
 			bottomWrap = 1.60;
+		}
+		if ((p.height >= 600) && (p.height < 700)) {
+			topWrap = 1.70;
+			bottomWrap = 1.70;
+		}
+		if ((p.height >= 500) && (p.height < 600)) {
+			topWrap = 1.80;
+			bottomWrap = 1.80;
+		}
+		if ((p.height >= 400) && (p.height < 500)) {
+			topWrap = 2.00;
+			bottomWrap = 2.00;
+		}
+		if ((p.height >= 300) && (p.height < 400)) {
+			topWrap = 3.00;
+			bottomWrap = 3.00;
+		}
+		if ((p.height >= 200) && (p.height < 300)) {
+			topWrap = 3.20;
+			bottomWrap = 3.20;
 		}
 	}
 
@@ -232,15 +260,19 @@ var s = function( p ) {
 	};
 
 	p.draw = function() {
+		p.push();
 		p.background(0);
 
 		for (i=0; i<objects.length; i++) {
+			p.push();
 			p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
 			p.rotate(objects[i].spinAccumulator, objects[i].spin);
 			objects[i].drawMain();
 			objects[i].move();
 			level.checkBoundaries(objects[i]);
+			p.pop();
 		}
+		p.pop();
 	};
 
 	// auto-resize canvas to window size
