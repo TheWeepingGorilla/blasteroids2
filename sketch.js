@@ -10,7 +10,7 @@ var s = function( p ) {
 		this.angularVelocity = 0;
 		this.angularVelocityLimit = 0;
 
-		this.location = p.createVector(0, 0);
+		this.location = p.createVector(0, 0, 0);
 		this.velocity = p.createVector(0, 0);
 		this.thrust = 0;
 
@@ -56,9 +56,10 @@ var s = function( p ) {
 			}
 		}
 
-		this.setLocation = function(x, y) {
+		this.setLocation = function(x, y, z) {
 			this.location.x = x;
 			this.location.y = y;
+			this.location.z = z;
 		}
 
 		this.applyThrust = function() {
@@ -205,23 +206,23 @@ var s = function( p ) {
 			leftWrap = 1.45;
 		}
 		// Top & Bottom
-		if ((p.height >= 900) && (p.height < 1000)) {
+		if ((p.height > 900) && (p.height <= 1000)) {
 			topWrap = 1.00;
 			bottomWrap = 1.00;
 		}
-		if ((p.height >= 800) && (p.height < 900)) {
+		if ((p.height > 800) && (p.height <= 900)) {
 			topWrap = 1.20;
 			bottomWrap = 1.20;
 		}
-		if ((p.height >= 700) && (p.height < 800)) {
-			topWrap = 1.60;
-			bottomWrap = 1.60;
+		if ((p.height > 700) && (p.height <= 800)) {
+			topWrap = .75;
+			bottomWrap = .75;
 		}
-		if ((p.height >= 600) && (p.height < 700)) {
-			topWrap = 1.70;
-			bottomWrap = 1.70;
+		if ((p.height > 600) && (p.height <= 700)) {
+			topWrap = .75;
+			bottomWrap = .75;
 		}
-		if ((p.height >= 500) && (p.height < 600)) {
+		if ((p.height > 500) && (p.height <= 600)) {
 			topWrap = 1.80;
 			bottomWrap = 1.80;
 		}
@@ -247,14 +248,20 @@ var s = function( p ) {
 	objects[0].spin.y = 1;
 	objects[0].spin.z = 0;
 	objects[0].spinVelocity = .1;
+	objects[0].setLocation(0,0,-200);
 
 	var levels = [];
 	levels[0] = {top: wrapTop, left: wrapLeft, bottom: wrapBottom, right: wrapRight};
 	var level = new Level(levels[0]);
 
+	// var img;
+	// function preload(){
+	// 	img = loadImage(“path/to/img.jpg”);
+	// }
+
 	p.setup = function() {
 		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-		p.ortho(-p.width, p.width, p.height, -p.height, 0.1, 100);
+		// p.ortho(-p.width, p.width, p.height, -p.height, 0.1, 100);
 		wrapCallibrate();
 		console.log(p.height);
 	};
