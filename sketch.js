@@ -11,7 +11,7 @@ var s = function( p ) {
 		this.angularVelocityLimit = 0;
 
 		this.location = p.createVector(0, 0, 0);
-		this.velocity = p.createVector(0, 0);
+		this.velocity = p.createVector(0, 0, 0);
 		this.thrust = 0;
 
 		this.controller = 'program';
@@ -62,6 +62,19 @@ var s = function( p ) {
 			this.location.z = z;
 		}
 
+		this.setVelocity = function(x,y,z) {
+			this.velocity.x = x;
+			this.velocity.y = y;
+			this.velocity.z = z;
+		}
+
+		this.setSpin = function(x,y,z,velocity) {
+			this.spin.x = x;
+			this.spin.y = y;
+			this.spin.z = z;
+			this.spinVelocity = velocity;
+		}
+
 		this.applyThrust = function() {
 			var x = p.cos(this.angle);
 			var y = p.sin(this.angle);
@@ -105,12 +118,12 @@ var s = function( p ) {
 		}
 	}
 
-	function Box(size) {
+	function Box(args) {
 		Thing.call(this);
 
 		this.spinAccumulator = 0;
 		this.spin = p.createVector(1,1,0);
-		this.size = size;
+		this.size = args.size;
 
 		this.drawMain = function() {
 			p.box(this.size);
@@ -161,58 +174,58 @@ var s = function( p ) {
 	}
 
 	wrapCallibrate = function() {
-		if ((p.width >= 1700) && (p.width < 1800)) {
+		if ((p.width > 1700) && (p.width <= 1800)) {
 			rightWrap = .59;
 			leftWrap = .59;
 		}
-		if ((p.width >= 1600) && (p.width < 1700)) {
+		if ((p.width > 1600) && (p.width <= 1700)) {
 			rightWrap = .61;
 			leftWrap = .61;
 		}
-		if ((p.width >= 1500) && (p.width < 1600)) {
+		if ((p.width > 1500) && (p.width <= 1600)) {
 			rightWrap = .66;
 			leftWrap = .66;
 		}
-		if ((p.width >= 1400) && (p.width < 1500)) {
+		if ((p.width > 1400) && (p.width <= 1500)) {
 			rightWrap = .72;
 			leftWrap = .72;
 		}
-		if ((p.width >= 1300) && (p.width < 1400)) {
-			rightWrap = .77;
-			leftWrap = .77;
+		if ((p.width > 1300) && (p.width <= 1400)) {
+			rightWrap = .65;
+			leftWrap = .65;
 		}
-		if ((p.width >= 1200) && (p.width < 1300)) {
+		if ((p.width > 1200) && (p.width <= 1300)) {
 			rightWrap = .81;
 			leftWrap = .81;
 		}
-		if ((p.width >= 1100) && (p.width < 1200)) {
+		if ((p.width > 1100) && (p.width <= 1200)) {
 			rightWrap = .91;
 			leftWrap = .91;
 		}
-		if ((p.width >= 1000) && (p.width < 1100)) {
+		if ((p.width > 1000) && (p.width <= 1100)) {
 			rightWrap = 1.04;
 			leftWrap = 1.04;
 		}
-		if ((p.width >= 900) && (p.width < 1000)) {
+		if ((p.width > 900) && (p.width <= 1000)) {
 			rightWrap = 1.21;
 			leftWrap = 1.21;
 		}
-		if ((p.width >= 800) && (p.width < 900)) {
+		if ((p.width > 800) && (p.width <= 900)) {
 			rightWrap = 1.33;
 			leftWrap = 1.33;
 		}
-		if ((p.width >= 700) && (p.width < 800)) {
+		if ((p.width > 700) && (p.width <= 800)) {
 			rightWrap = 1.45;
 			leftWrap = 1.45;
 		}
 		// Top & Bottom
 		if ((p.height > 900) && (p.height <= 1000)) {
-			topWrap = 1.00;
-			bottomWrap = 1.00;
+			topWrap = .65;
+			bottomWrap = .65;
 		}
 		if ((p.height > 800) && (p.height <= 900)) {
-			topWrap = 1.20;
-			bottomWrap = 1.20;
+			topWrap = .55;
+			bottomWrap = .55;
 		}
 		if ((p.height > 700) && (p.height <= 800)) {
 			topWrap = .75;
@@ -241,14 +254,7 @@ var s = function( p ) {
 	}
 
 	var objects = [];
-	objects[0] = new Box(50);
-	objects[0].velocity.x = 0;
-	objects[0].velocity.y = -4;
-	objects[0].spin.x = 1;
-	objects[0].spin.y = 1;
-	objects[0].spin.z = 0;
-	objects[0].spinVelocity = .1;
-	objects[0].setLocation(0,0,-200);
+	var largeBox = {size: 40};
 
 	var levels = [];
 	levels[0] = {top: wrapTop, left: wrapLeft, bottom: wrapBottom, right: wrapRight};
@@ -261,9 +267,17 @@ var s = function( p ) {
 
 	p.setup = function() {
 		p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-		// p.ortho(-p.width, p.width, p.height, -p.height, 0.1, 100);
 		wrapCallibrate();
 		console.log(p.height);
+
+		objects[0] = new Box(largeBox);
+		objects[0].setVelocity(0,0,0);
+		objects[0].setSpin(1,1,.5,.1);
+		objects[0].setLocation(-p.width * .25, 0, -200);
+		objects[1] = new Box(largeBox);
+		objects[1].setVelocity(0,0,0);
+		objects[1].setSpin(-1,-1,-.5,.1);
+		objects[1].setLocation(p.width * .25 ,0,-200);
 	};
 
 	p.draw = function() {
