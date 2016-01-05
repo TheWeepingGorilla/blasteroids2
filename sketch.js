@@ -118,6 +118,36 @@ var s = function( p ) {
 		}
 	}
 
+	function TriangleShip(args) {
+		Thing.call(this);
+
+		this.spinAccumulator = 0;
+		this.spin = p.createVector(1,1,0);
+		this.size = args.size;
+		this.height = args.height;
+		this.id = 'TS' + args.id;
+		this.thrust = [{strength: 0.2, directionOffset: 0}];
+		this.rotation = {strength: Math.PI / 64, damping: .05, angularVelocityLimit: .2};
+
+		this.drawMain = function() {
+			// p.strokeWeight(4);
+			// p.stroke(240);
+			// p.line(24, 0, -16, -12);
+			// p.line(-16, -12, 0, 0);
+			// p.line(0, 0, -16, 12);
+			// p.line(-16, 12, 24, 0);
+			p.cone(this.size, this.height);
+		}
+
+		this.drawThrust = function() {
+			// p.strokeWeight(2);
+			// p.stroke(240);
+			// p.line(-8, 4, -24, 0);
+			// p.line(-24, 0, -8, -4);
+		}
+	}
+	TriangleShip.prototype = Object.create(Thing.prototype);
+
 	function Box(args) {
 		Thing.call(this);
 
@@ -130,6 +160,13 @@ var s = function( p ) {
 		}
 	}
 	Box.prototype = Object.create(Thing.prototype);
+
+	function Player() {
+		this.thrust = 87;
+		this.rotateCounterclockwise = 65;
+		this.rotateClockwise = 68;
+		this.name = 'playerOne';
+	}
 
 	function Level(args) {
 		this.top = args.top;
@@ -253,6 +290,9 @@ var s = function( p ) {
 		}
 	}
 
+	var players = [];
+	players[0] = new Player();
+
 	var objects = [];
 	var largeBox = {size: 40};
 
@@ -274,9 +314,9 @@ var s = function( p ) {
 		objects[0].setVelocity(0,0,0);
 		objects[0].setSpin(1,1,.5,.1);
 		objects[0].setLocation(-p.width * .25, 0, -200);
-		objects[1] = new Box(largeBox);
-		objects[1].setVelocity(0,0,0);
-		objects[1].setSpin(-1,-1,-.5,.1);
+		objects[1] = new TriangleShip({id: 0, size: 20, height: 40});
+		objects[1].setVelocity(0,1,0);
+		objects[1].setSpin(2,1,.5,.1);
 		objects[1].setLocation(p.width * .25 ,0,-200);
 	};
 
