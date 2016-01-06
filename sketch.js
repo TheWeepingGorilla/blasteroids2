@@ -130,20 +130,25 @@ var s = function( p ) {
 		this.rotation = {strength: Math.PI / 64, damping: .05, angularVelocityLimit: .2};
 
 		this.drawMain = function() {
-			// p.strokeWeight(4);
-			// p.stroke(240);
-			// p.line(24, 0, -16, -12);
-			// p.line(-16, -12, 0, 0);
-			// p.line(0, 0, -16, 12);
-			// p.line(-16, 12, 24, 0);
-			p.cone(this.size, this.height);
+			p.fill('#d1e1e1');
+			p.beginShape();
+			p.vertex(40,0,0);
+			p.vertex(-40,-20,0);
+			p.vertex(-16,0,0);
+			p.endShape();
+			p.beginShape();
+			p.vertex(40,0,0);
+			p.vertex(-40,20,0);
+			p.vertex(-16,0,0);
+			p.endShape();
 		}
 
 		this.drawThrust = function() {
-			// p.strokeWeight(2);
-			// p.stroke(240);
-			// p.line(-8, 4, -24, 0);
-			// p.line(-24, 0, -8, -4);
+			p.beginShape();
+ 			p.vertex(-56,0,0);
+ 			p.vertex(-16,-8,0);
+ 			p.vertex(-16,8,0);
+ 			p.endShape();
 		}
 	}
 	TriangleShip.prototype = Object.create(Thing.prototype);
@@ -158,6 +163,7 @@ var s = function( p ) {
 		this.drawMain = function() {
 			p.box(this.size);
 		}
+
 	}
 	Box.prototype = Object.create(Thing.prototype);
 
@@ -315,8 +321,8 @@ var s = function( p ) {
 		objects[0].setSpin(1,1,.5,.1);
 		objects[0].setLocation(-p.width * .25, 0, -200);
 		objects[1] = new TriangleShip({id: 0, size: 20, height: 40});
-		objects[1].setVelocity(0,1,0);
-		objects[1].setSpin(2,1,.5,.1);
+		// objects[1].setVelocity(0,1,0);
+		// objects[1].setSpin(2,1,.5,.1);
 		objects[1].setLocation(p.width * .25 ,0,-200);
 	};
 
