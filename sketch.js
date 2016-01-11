@@ -134,21 +134,35 @@ var s = function( p ) {
 			p.beginShape();
 			p.vertex(40,0,0);
 			p.vertex(-40,-20,0);
-			p.vertex(-16,0,0);
+			p.vertex(-16,0,-10);
 			p.endShape();
 			p.beginShape();
 			p.vertex(40,0,0);
 			p.vertex(-40,20,0);
-			p.vertex(-16,0,0);
+			p.vertex(-16,0,-10);
+			p.endShape();
+			p.beginShape();
+			p.vertex(40,0,0);
+			p.vertex(-40,-20,0);
+			p.vertex(-16,0,10);
+			p.endShape();
+			p.beginShape();
+			p.vertex(40,0,0);
+			p.vertex(-40,20,0);
+			p.vertex(-16,0,10);
 			p.endShape();
 		}
 
 		this.drawThrust = function() {
 			p.beginShape();
  			p.vertex(-56,0,0);
- 			p.vertex(-16,-8,0);
- 			p.vertex(-16,8,0);
+ 			p.vertex(-16,-8,8);
+ 			p.vertex(-16,8,8);
  			p.endShape();
+ 			p.beginShape();
+ 			p.vertex(-56,0,0);
+ 			p.vertex(-16,-8,-8);
+ 			p.vertex(-16,8,-8);
 		}
 	}
 	TriangleShip.prototype = Object.create(Thing.prototype);
@@ -323,7 +337,7 @@ var s = function( p ) {
 		objects[1] = new TriangleShip({id: 0, size: 20, height: 40});
 		// objects[1].setVelocity(0,1,0);
 		// objects[1].setSpin(2,1,.5,.1);
-		objects[1].setLocation(p.width * .25 ,0,-200);
+		objects[1].setLocation(0, 0, -200);
 	};
 
 	p.draw = function() {
@@ -333,7 +347,9 @@ var s = function( p ) {
 		for (i=0; i<objects.length; i++) {
 			p.push();
 			p.translate(objects[i].location.x, objects[i].location.y, objects[i].location.z);
-			p.rotate(objects[i].spinAccumulator, objects[i].spin);
+			// p.rotate(objects[i].spinAccumulator, objects[i].spin);
+			// test - next line
+			p.rotateY(p.frameCount * 0.01);
 			objects[i].drawMain();
 			objects[i].move();
 			level.checkBoundaries(objects[i]);
